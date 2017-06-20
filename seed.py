@@ -37,9 +37,51 @@ def load_users():
 def load_movies():
     """Load movies from u.item into database."""
 
+    Movie.query.delete()
+
+    # Read u.item file and insert data
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+        movie_id, title, released_at, imbd_url = row.split()
+        #possibly mucky situation?!??
+        #read up on this tonight!
+        #adding a single row in the the movie table for each line in the u.item file.
+        
+        movie = Movie(movie_id=int(movie_id),
+                      title=title,
+                      released_at=released_at,
+                      imbd_url=imbd_url)
+
+        # Add to the session or it won't ever be stored
+        db.session.add(movie)
+
+    # Once we're done, we should commit our work
+    db.session.commit()
+
 
 def load_ratings():
     """Load ratings from u.data into database."""
+
+    Rating.query.delete()
+
+    # Read u.item file and insert data
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        rating_id, movie_id, user_id, score = row.split()
+        #this will return a list for each row, the list will include four strings each.
+        #one string for each rating_id, movie_id, user_id and score
+
+        #adding a single row in the rating table for each line in the u.data txt file.
+        rating = Rating(rating_id=int(rating_id),
+                        movie_id=int(movie_id),
+                        user_id=int(user_id),
+                        score=int(score))
+
+        # Add to the session or it won't ever be stored
+        db.session.add(rating)
+
+    # Once we're done, we should commit our work
+    db.session.commit()
 
 
 def set_val_user_id():
