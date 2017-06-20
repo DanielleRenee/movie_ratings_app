@@ -42,11 +42,17 @@ def load_movies():
     # Read u.item file and insert data
     for row in open("seed_data/u.item"):
         row = row.rstrip()
-        movie_id, title, released_at, imbd_url = row.split()
+        new_row = row[:-38]
         #possibly mucky situation?!??
-        #read up on this tonight!
-        #adding a single row in the the movie table for each line in the u.item file.
+        #need to remove the all binary data after imbd url
         
+        #unpack the string in to variables, deal with the title later 
+        movie_id, title, release_date, empty_string, imbd_url = new_row.split("|")
+        
+        date = title[-5:-1]
+        movie_title = title[:-7]
+      
+        #add a single row in the the movie table for each line in the u.item file.
         movie = Movie(movie_id=int(movie_id),
                       title=title,
                       released_at=released_at,
