@@ -6,6 +6,7 @@ from flask import Flask, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db
+from datetime import datetime
 
 
 app = Flask(__name__)

@@ -2,8 +2,9 @@
 
 from sqlalchemy import func
 from model import User
-# from model import Rating
-# from model import Movie
+from model import Rating
+from model import Movie
+from datetime import datetime
 
 from model import connect_to_db, db
 from server import app
@@ -42,20 +43,21 @@ def load_movies():
     # Read u.item file and insert data
     for row in open("seed_data/u.item"):
         row = row.rstrip()
-        new_row = row[:-38]
-        #possibly mucky situation?!??
-        #need to remove the all binary data after imbd url
-        
-        #unpack the string in to variables, deal with the title later 
-        movie_id, title, release_date, empty_string, imbd_url = new_row.split("|")
-        
-        date = title[-5:-1]
-        movie_title = title[:-7]
-      
+        row = row.split("|")
+
+        #unpack the string in to variables, deal with the title later
+        movie_id, title, s, empty_string, imbd_url = row[:5]
+
+        # date = title[-5:-1]
+        title = title[:-7]
+
+        #using string parse time to to turn a string in to a datetime object
+        d = datetime.strptime(s, "%d-%b-%Y")
+
         #add a single row in the the movie table for each line in the u.item file.
         movie = Movie(movie_id=int(movie_id),
                       title=title,
-                      released_at=released_at,
+                      released_at=d,
                       imbd_url=imbd_url)
 
         # Add to the session or it won't ever be stored
